@@ -3,303 +3,301 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>THE HOMEWORK | 5B2G0017 - RIMURU HOME</title>
+    <title>利姆路 | 核心方塊系統</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700;900&display=swap');
-
         :root {
-            --bg: #0d0d0d;
-            --text: #ffffff;
-            --accent: #bcff00; 
-            --rimuru-blue: #87ceeb; 
-            --gray: #222;
-            --transition: 0.8s cubic-bezier(0.2, 1, 0.3, 1);
+            --rimuru-blue: #a0d8ef;
+            --deep-space: #0a0f1d;
+            
+            /* --- 垂直距離與尺寸控制變數 (方便自行調整) --- */
+            --box-gap: 20px;     /* 圖片與文字塊之間的距離 */
+            --text-gap: 8px;     /* ANALYSIS 與 標題之間的距離 */
+            --icon-size: 100px;  /* 圖片/GIF 的顯示大小 */
         }
 
-        * { 
-            margin: 0; padding: 0; box-sizing: border-box; 
-            font-family: 'Space Grotesk', sans-serif; 
+        body {
+            margin: 0;
+            background-color: var(--deep-space);
+            color: #fff;
+            font-family: 'Orbitron', 'PingFang TC', sans-serif;
+            overflow: hidden;
+            height: 100vh;
         }
 
-        body { 
-            background: var(--bg); 
-            color: var(--text); 
-            overflow-x: hidden;
-            scroll-behavior: smooth; /* 增加平滑滾動效果 */
-        }
-
-        /* --- 動態背景 Canvas --- */
         #bg-canvas {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1; opacity: 0.6;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at 50% 50%, #1a2a4a 0%, #0a0f1d 100%);
         }
 
-        /* 捲動條美化 */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: var(--bg); }
-        ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
-
-        /* 左側固定導覽列 */
-        .side-nav {
-            position: fixed; left: 0; top: 0; height: 100vh; width: 80px;
-            border-right: 1px solid var(--gray);
-            display: flex; flex-direction: column; justify-content: space-between;
-            align-items: center; padding: 2.5rem 0; z-index: 1000;
-            background: rgba(13, 13, 13, 0.8);
-            backdrop-filter: blur(10px);
-        }
-
-        /* --- 大頭貼樣式 (Rimuru GIF) --- */
-        .nav-avatar {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            border: 2px solid var(--rimuru-blue);
-            background-image: url('data:image/jpeg;base64,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');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
-            cursor: pointer;
-            box-shadow: 0 0 15px rgba(135, 206, 235, 0.3);
-        }
-        
-        .nav-avatar:hover {
-            transform: scale(1.2) rotate(-5deg); /* 換個方向旋轉增加動感 */
-            box-shadow: 0 0 30px rgba(135, 206, 235, 0.7);
-            border-color: #fff;
-        }
-
-        .social-links { display: flex; flex-direction: column; gap: 1.5rem; font-size: 0.8rem; cursor: pointer; color: #666; }
-
-        /* 主容器 */
-        .container { margin-left: 80px; padding: 2rem; position: relative; z-index: 1; }
-
-        header {
+        .wrapper {
+            position: relative;
+            width: 100%; height: 100vh;
             display: flex;
-            min-height: 30vh; align-items: flex-end; margin-bottom: 5rem;
-        }
-        .main-title h1 { 
-            font-size: clamp(4rem, 12vw, 10rem); 
-            line-height: 0.85; letter-spacing: -4px;
-            text-transform: uppercase;
-            animation: heroFloat 5s ease-in-out infinite;
+            justify-content: center;
+            align-items: center;
+            z-index: 1;
         }
 
-        @keyframes heroFloat {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
+        .page-section {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            width: 100%; height: 100%;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
         }
 
-        /* 網格系統 */
-        .bento-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            grid-auto-rows: 280px;
-            gap: 1.5rem;
-            margin-bottom: 5rem;
+        .page-section.active { display: flex; opacity: 1; }
+
+        /* --- 初始啟動頁面 --- */
+        #init-page { flex-direction: column; }
+        .rimuru-core {
+            width: 160px; height: 130px;
+            background: linear-gradient(135deg, #a0d8ef 0%, #3498db 100%);
+            border-radius: 50% 50% 45% 45% / 65% 65% 35% 35%;
+            margin-bottom: 30px;
+            box-shadow: 0 0 50px var(--rimuru-blue);
+            animation: slimeFloat 4s infinite ease-in-out;
+        }
+        @keyframes slimeFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+
+        .btn-main {
+            background: transparent; border: 2px solid var(--rimuru-blue);
+            color: var(--rimuru-blue); padding: 18px 50px; font-weight: bold;
+            cursor: pointer; border-radius: 50px; letter-spacing: 3px;
+            transition: all 0.3s ease;
+        }
+        .btn-main:hover { background-color: var(--rimuru-blue); color: var(--deep-space); transform: scale(1.05); }
+
+        /* --- 方塊選單佈局 (300x280 以容納圖片與間距) --- */
+        #menu-grid {
+            grid-template-columns: repeat(2, 300px); 
+            grid-template-rows: repeat(2, 280px); 
+            gap: 40px; 
+            justify-content: center; align-content: center;
         }
 
-        .card { 
-            background: rgba(34, 34, 34, 0.5); 
-            border-radius: 4px; overflow: hidden; position: relative;
-            transition: var(--transition);
-            backdrop-filter: blur(5px);
-            opacity: 0; transform: translateY(50px);
-            border: 1px solid rgba(255,255,255,0.05);
+        .menu-box {
+            background: rgba(10, 15, 29, 0.7);
+            border: 1px solid rgba(160, 216, 239, 0.2);
+            border-radius: 20px; 
+            backdrop-filter: blur(8px);
             cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center; 
+            align-items: center;     
+            padding: 30px;
+            box-sizing: border-box;
+            gap: var(--box-gap);
         }
 
-        .card img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; transition: var(--transition); }
-        .card:hover { border-color: var(--accent); }
-        .card:hover img { opacity: 0.2; transform: scale(1.1); }
-
-        .tall { grid-row: span 2; }
-        .wide { grid-column: span 2; }
-
-        .card-content { position: absolute; bottom: 20px; left: 20px; z-index: 2; }
-        .card-content h3 { font-size: 1.8rem; text-transform: uppercase; border-bottom: 2px solid var(--accent); display: inline-block; }
-
-        /* 跑馬燈 */
-        .marquee {
-            width: 100vw; margin-left: -80px; padding: 1.5rem 0;
-            background: var(--accent); color: #000;
-            overflow: hidden; white-space: nowrap;
-            font-size: 2.5rem; font-weight: 900; transform: rotate(-1deg);
-            margin-top: 50px;
+        .menu-box:hover {
+            background: rgba(160, 216, 239, 0.15); 
+            border-color: var(--rimuru-blue); 
+            transform: translateY(-8px);
         }
-        .marquee span { display: inline-block; animation: scroll 25s linear infinite; }
-        @keyframes scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
-        /* 內容詳解層 */
-        .content-overlay {
-            position: fixed; top: 0; left: 80px; width: calc(100% - 80px); height: 100vh;
-            background: rgba(13, 13, 13, 0.95); z-index: 2000;
-            transform: translateY(100%); transition: var(--transition);
-            overflow-y: auto; padding: 6rem 4rem;
+        /* --- 圖片/GIF 顯示容器 --- */
+        .box-icon {
+            width: var(--icon-size);
+            height: var(--icon-size);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.3s ease;
+            overflow: hidden;
+        }
+
+        .box-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* 保持 GIF/圖片 比例不變形 */
+            filter: drop-shadow(0 0 8px rgba(160, 216, 239, 0.3)); /* 微微發光感 */
+        }
+
+        /* 接觸方塊時：圖片放大 (無旋轉、無背景發光) */
+        .menu-box:hover .box-icon {
+            transform: scale(1.1); 
+        }
+
+        /* --- 文字內容區塊 --- */
+        .text-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--text-gap);
+            text-align: center;
+        }
+        .tag { font-size: 0.8rem; color: var(--rimuru-blue); opacity: 0.6; letter-spacing: 2px; }
+        h3 { font-size: 1.6rem; margin: 0; letter-spacing: 4px; font-weight: bold; }
+
+        /* --- 內容詳細介面 --- */
+        .detail-page {
+            width: 85%; height: 80%;
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid var(--rimuru-blue);
+            border-radius: 30px;
+            padding: 60px;
+            box-sizing: border-box;
+            position: relative;
             backdrop-filter: blur(20px);
+            display: flex; flex-direction: column;
         }
-        .content-overlay.active { transform: translateY(0); }
-
+        .detail-header h2 { font-size: 2.5rem; color: var(--rimuru-blue); margin: 0; letter-spacing: 4px; }
+        
+        /* --- 關閉按鈕：固定位置、不隨內容位移 --- */
         .close-btn {
-            position: fixed; top: 2rem; right: 2rem;
-            background: var(--accent); color: #000; border: none;
-            padding: 1.2rem 2rem; font-weight: 900; border-radius: 50px;
-            z-index: 2001; cursor: pointer;
+            position: fixed; 
+            top: 30px; 
+            right: 30px;
+            width: 50px; 
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1); 
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff; 
+            border-radius: 50%; 
+            cursor: pointer;
+            display: flex; 
+            justify-content: center; 
+            align-items: center;
+            font-size: 1.8rem; 
+            z-index: 9999; 
+            transition: all 0.3s ease;
+        }
+        .close-btn:hover {
+            background: #ff4757; 
+            transform: rotate(90deg) scale(1.1); 
+            border-color: transparent;
         }
 
-        .inner-content { max-width: 900px; margin: 0 auto; opacity: 0; transform: translateY(30px); }
-        .inner-content.reveal { opacity: 1; transform: translateY(0); transition: 1s ease 0.3s; }
-
-        @media (max-width: 1024px) {
-            .bento-grid { grid-template-columns: repeat(2, 1fr); }
-            .content-overlay { left: 0; width: 100%; }
-            .side-nav { display: none; }
-            .container { margin-left: 0; }
-        }
+        table { width: 100%; border-spacing: 0 15px; }
+        td { padding: 20px; background: rgba(255,255,255,0.05); border-radius: 12px; }
     </style>
 </head>
 <body>
 
     <canvas id="bg-canvas"></canvas>
 
-    <nav class="side-nav">
-        <div class="nav-avatar" onclick="backToHome()" title="回首頁"></div>
-        
-        <div class="social-links">
-            <span>IG</span><span>TW</span><span>FB</span>
-        </div>
-    </nav>
+    <div class="wrapper">
+        <!-- 初始啟動頁面 -->
+        <section id="init-page" class="page-section active" style="display: flex; opacity: 1;">
+            <div class="rimuru-core"></div>
+            <h2 style="letter-spacing: 8px; margin-bottom: 30px;">CENTRAL HUB</h2>
+            <button class="btn-main" onclick="switchPage('menu-grid')">啟動解析鑑定</button>
+        </section>
 
-    <div class="container" id="mainContainer">
-        <header>
-            <div class="main-title">
-                <h1>MY<br><span style="color:transparent; -webkit-text-stroke: 1px white;">WEB</span></h1>
+        <!-- 方塊選單頁面 -->
+        <section id="menu-grid" class="page-section">
+            <button class="close-btn" onclick="switchPage('init-page')">×</button>
+            
+            <!-- 方塊 1 -->
+            <div class="menu-box" onclick="openDetail('status-win', '《個體解析報告》')">
+                <div class="box-icon">
+                    <img src="images/analysis.gif" alt="能力屬性 GIF"> 
+                </div>
+                <div class="text-content">
+                    <div class="tag">ANALYSIS</div>
+                    <h3>能力屬性</h3>
+                </div>
             </div>
-        </header>
 
-        <section class="bento-grid">
-            <div class="card wide tall" onclick="openPage('homework')">
-                <img src="https://images.unsplash.com/photo-1614850523296-d8c1af93d400?auto=format&fit=crop&w=800" alt="">
-                <div class="card-content"><h3>HOMEWORK</h3></div>
+            <!-- 方塊 2 -->
+            <div class="menu-box" onclick="openDetail('nation-win', '《聯邦檔案庫》')">
+                <div class="box-icon">
+                    <img src="images/archive.gif" alt="聯邦檔案 GIF">
+                </div>
+                <div class="text-content">
+                    <div class="tag">ARCHIVE</div>
+                    <h3>聯邦檔案</h3>
+                </div>
             </div>
-            <div class="card tall" onclick="openPage('about')">
-                <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=400" alt="">
-                <div class="card-content"><h3>ABOUT ME</h3></div>
+
+            <!-- 方塊 3 -->
+            <div class="menu-box" onclick="openDetail('skill-win', '《終極技能列表》')">
+                <div class="box-icon">
+                    <img src="images/ultimate.gif" alt="終極技能 GIF">
+                </div>
+                <div class="text-content">
+                    <div class="tag">ULTIMATE</div>
+                    <h3>終極技能</h3>
+                </div>
             </div>
-            <div class="card" onclick="openPage('lab')">
-                <img src="https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?auto=format&fit=crop&w=400" alt="">
-                <div class="card-content"><h3>LAB</h3></div>
-            </div>
-            <div class="card wide" onclick="openPage('contact')">
-                <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800" alt="">
-                <div class="card-content"><h3>CONTACT</h3></div>
+
+            <!-- 方塊 4 -->
+            <div class="menu-box" onclick="openDetail('memo-win', '《轉生紀事》')">
+                <div class="box-icon">
+                    <img src="images/memory.gif" alt="轉生紀事 GIF">
+                </div>
+                <div class="text-content">
+                    <div class="tag">MEMORY</div>
+                    <h3>轉生紀事</h3>
+                </div>
             </div>
         </section>
 
-        <div class="marquee">
-            <span>CREATIVE DESIGN • WEB DEVELOPMENT • 5B2G0017 • MAR 2026 • WORK HARD • PLAY HARD • </span>
-            <span>CREATIVE DESIGN • WEB DEVELOPMENT • 5B2G0017 • MAR 2026 • WORK HARD • PLAY HARD • </span>
-        </div>
+        <!-- 詳細內容展現頁 -->
+        <section id="detail-section" class="page-section">
+            <button class="close-btn" onclick="switchPage('menu-grid')">×</button>
+            <div class="detail-page">
+                <div class="detail-header"><h2 id="detail-title">系統加載中</h2></div>
+                <div id="detail-content" style="flex-grow: 1; overflow-y: auto; margin-top: 20px;"></div>
+            </div>
+        </section>
     </div>
 
-    <div id="page-homework" class="content-overlay">
-        <button class="close-btn" onclick="closePage()">BACK TO HOME</button>
-        <div class="inner-content"><h2>MY PROJECTS</h2><p>這裡是作業區...</p></div>
-    </div>
-
-    <div id="page-about" class="content-overlay">
-        <button class="close-btn" onclick="closePage()">CLOSE</button>
-        <div class="inner-content"><h2>ABOUT ME</h2><p>我是 5B2G0017...</p></div>
+    <!-- 隱藏數據庫內容 -->
+    <div style="display:none;">
+        <div id="data-status-win"><table><tr><td>種族：魔黏性精神體</td></tr><tr><td>稱號：聖魔混世皇</td></tr></table></div>
+        <div id="data-nation-win"><p>位置：鳩拉·特恩佩斯特聯邦國</p></div>
+        <div id="data-skill-win"><ul style="color: var(--rimuru-blue);"><li>智慧之王 (Raphael)</li><li>暴食之王 (Beelzebuth)</li></ul></div>
+        <div id="data-memo-win"><p>記錄從三上悟轉生以來的所有重要轉折點與戰鬥紀錄...</p></div>
     </div>
 
     <script>
-        // --- 1. 背景粒子系統 ---
+        // 背景粒子系統
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
-        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-        window.addEventListener('resize', resize);
-        resize();
-
-        class Particle {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 2 + 0.5;
-                this.speedX = Math.random() * 0.5 - 0.25;
-                this.speedY = Math.random() * 0.5 - 0.25;
-                this.color = '#bcff00';
-            }
-            update() {
-                this.x += this.speedX; this.y += this.speedY;
-                if (this.x > canvas.width || this.x < 0) this.speedX *= -1;
-                if (this.y > canvas.height || this.y < 0) this.speedY *= -1;
-            }
-            draw() {
-                ctx.fillStyle = this.color;
-                ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
-            }
-        }
-
-        function initParticles() { for (let i = 0; i < 80; i++) particles.push(new Particle()); }
+        function initCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
         function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(p => { p.update(); p.draw(); });
-            for (let i = 0; i < particles.length; i++) {
-                for (let j = i; j < particles.length; j++) {
-                    let dx = particles[i].x - particles[j].x;
-                    let dy = particles[i].y - particles[j].y;
-                    let dist = Math.sqrt(dx * dx + dy * dy);
-                    if (dist < 150) {
-                        ctx.strokeStyle = `rgba(188, 255, 0, ${1 - dist/150})`;
-                        ctx.lineWidth = 0.5; ctx.beginPath(); ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(particles[j].x, particles[j].y); ctx.stroke();
-                    }
-                }
-            }
+            particles.forEach(p => {
+                p.x += p.speedX; p.y += p.speedY;
+                if (p.x > canvas.width || p.x < 0 || p.y > canvas.height || p.y < 0) { p.x = Math.random() * canvas.width; p.y = Math.random() * canvas.height; }
+                ctx.fillStyle = `rgba(160, 216, 239, ${p.opacity})`;
+                ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill();
+            });
             requestAnimationFrame(animate);
         }
-        initParticles(); animate();
+        initCanvas();
+        for (let i = 0; i < 100; i++) particles.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, size: Math.random() * 2 + 1, speedX: Math.random() * 0.4 - 0.2, speedY: Math.random() * 0.4 - 0.2, opacity: Math.random() * 0.5 + 0.2 });
+        animate();
+        window.addEventListener('resize', initCanvas);
 
-        // --- 2. 頁面控制 ---
-        function openPage(pageId) {
-            const overlay = document.getElementById('page-' + pageId);
-            if(overlay) {
-                overlay.classList.add('active');
-                overlay.querySelector('.inner-content').classList.add('reveal');
-                document.body.style.overflow = 'hidden';
-            }
+        // 頁面切換邏輯
+        function switchPage(pageId) {
+            const allPages = document.querySelectorAll('.page-section');
+            allPages.forEach(p => p.classList.remove('active'));
+            setTimeout(() => {
+                allPages.forEach(p => p.style.display = 'none');
+                const target = document.getElementById(pageId);
+                target.style.display = (pageId === 'menu-grid') ? 'grid' : 'flex';
+                requestAnimationFrame(() => target.classList.add('active'));
+            }, 300);
         }
 
-        function closePage() {
-            const overlays = document.querySelectorAll('.content-overlay');
-            overlays.forEach(el => {
-                el.classList.remove('active');
-                el.querySelector('.inner-content').classList.remove('reveal');
-            });
-            document.body.style.overflow = 'auto';
+        // 點選方塊開啟詳細視窗，自動抓取標題與內容
+        function openDetail(dataId, titleText) {
+            document.getElementById('detail-title').innerText = titleText;
+            document.getElementById('detail-content').innerHTML = document.getElementById('data-' + dataId).innerHTML;
+            switchPage('detail-section');
         }
-
-        // --- 3. 新增：回首頁功能 ---
-        function backToHome() {
-            closePage(); // 關閉所有展開的頁面
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth' // 平滑滾動到頂部
-            });
-        }
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, { threshold: 0.1 });
-        document.querySelectorAll('.card').forEach(card => observer.observe(card));
-
-        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closePage(); });
     </script>
 </body>
 </html>
