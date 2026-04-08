@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -143,7 +142,6 @@
             transition: all 0.8s ease;
         }
 
-        /* 電腦版特效 */
         @media (min-width: 1025px) {
             .menu-box:hover {
                 background: rgba(160, 216, 239, 0.15);
@@ -157,6 +155,54 @@
             }
         }
 
+        /* --- 手機版 2x2 與點擊回饋 --- */
+        @media (max-width: 1024px) {
+            #menu-grid {
+                grid-template-columns: repeat(2, 1fr);
+                width: 92%;
+                padding: 10px;
+                column-gap: 15px; row-gap: 15px;
+                align-content: start;
+                padding-top: 80px;
+            }
+            .menu-box { 
+                padding: 15px 10px; 
+                border-radius: 25px; 
+                min-height: 180px; 
+                transition: transform 0.2s ease, background 0.2s ease; /* 縮短回饋時間 */
+            }
+
+            /* 手機點擊回饋特效 */
+            .menu-box:active {
+                transform: scale(0.95); /* 點擊時縮小 */
+                background: rgba(160, 216, 239, 0.25); /* 點擊時背景變亮 */
+                border-color: var(--rimuru-blue);
+            }
+
+            .box-icon { height: 90px; }
+            h3 { font-size: 1.1rem; }
+
+            .detail-page {
+                width: 95% !important;
+                height: 85% !important;
+                padding: 40px 20px !important;
+                border-radius: 40px !important;
+            }
+            
+            .simple-text { font-size: 1.15rem; }
+            .simple-text p { margin: 20px 0; line-height: 1.8; }
+
+            /* 關閉按鈕手機版位置修正 */
+            .close-btn {
+                position: absolute !important;
+                top: 20px !important;
+                right: 20px !important;
+                width: 45px !important;
+                height: 45px !important;
+                font-size: 1.5rem !important;
+            }
+        }
+
         .text-content {
             display: flex;
             flex-direction: column;
@@ -167,7 +213,7 @@
         .tag { font-size: 0.8rem; color: var(--rimuru-blue); opacity: 0.7; letter-spacing: 2px; }
         h3 { font-size: 1.6rem; margin: 0; letter-spacing: 4px; font-weight: bold; }
 
-        /* --- 詳細頁面樣式 --- */
+        /* --- 詳細頁面內容框 --- */
         .detail-page {
             width: 85%;
             height: 80%;
@@ -183,7 +229,6 @@
             transition: all 0.4s ease;
         }
 
-        /* 作品集與聯絡方式小框化 */
         .detail-page.compact-mode {
             height: auto !important;
             max-width: 600px;
@@ -204,12 +249,14 @@
             align-items: center;
             font-size: 1.8rem;
             z-index: 9999;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .close-btn:hover, .close-btn:active {
-            background: var(--error-red);
-            transform: rotate(90deg) scale(1.1);
+        .close-btn:hover, 
+        .close-btn:active {
+            background: var(--error-red) !important;
+            transform: rotate(90deg) scale(1.1) !important;
+            border-color: transparent !important;
         }
 
         table { width: 100%; border-spacing: 0 15px; }
@@ -228,19 +275,12 @@
             transform: translateY(-3px);
         }
 
-        @media (max-width: 1024px) {
-            #menu-grid { grid-template-columns: repeat(2, 1fr); width: 95%; padding: 15px; }
-            .detail-page { width: 95%; height: 90%; padding: 30px 15px; }
-            .detail-page.compact-mode { width: 90%; height: auto !important; }
-        }
-
         .simple-text { font-size: 1.2rem; line-height: 1.6; color: #fff; }
         .copy-label { transition: color 0.4s ease; }
     </style>
 </head>
 
 <body>
-
     <canvas id="bg-canvas"></canvas>
 
     <div class="wrapper">
@@ -271,8 +311,8 @@
         </section>
 
         <section id="detail-section" class="page-section" style="justify-content: center; align-items: center;">
-            <button class="close-btn" onclick="goBack()">×</button>
             <div id="detail-card" class="detail-page">
+                <button class="close-btn" onclick="goBack()">×</button>
                 <h2 id="detail-title" style="color:var(--rimuru-blue); border-bottom:1px solid; padding-bottom:10px;"></h2>
                 <div id="detail-content" style="margin-top:20px; overflow-y:auto;"></div>
             </div>
@@ -311,7 +351,6 @@
     </template>
 
     <script>
-        // 背景特效保留
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
@@ -337,19 +376,13 @@
         }
         animate();
 
-        // --- 核心邏輯調整：區分電腦版與手機版 ---
         function switchPage(pageId, isHistoryAction = false) {
             const isMobile = window.innerWidth <= 1024;
-
-            // 如果是電腦版，且不是由返回鍵觸發，則推送紀錄
-            // 如果是手機版，則不推送紀錄（維持原本返回鍵直接關閉的行為）
             if (!isMobile && !isHistoryAction) {
                 history.pushState({ page: pageId }, '', '');
             }
-
             const allPages = document.querySelectorAll('.page-section');
             const target = document.getElementById(pageId);
-
             allPages.forEach(p => p.classList.remove('active'));
             setTimeout(() => {
                 allPages.forEach(p => p.style.display = 'none');
@@ -358,22 +391,17 @@
             }, 300);
         }
 
-        // 統一關閉邏輯
         function goBack() {
             const isMobile = window.innerWidth <= 1024;
             const activePage = document.querySelector('.page-section.active').id;
-
             if (!isMobile && activePage !== 'init-page') {
-                // 電腦版：使用瀏覽器紀錄回退
                 window.history.back();
             } else {
-                // 手機版：直接跳回上一層，不干涉紀錄
                 if (activePage === 'detail-section') switchPage('menu-grid', true);
                 else if (activePage === 'menu-grid') switchPage('init-page', true);
             }
         }
 
-        // 監聽電腦版瀏覽器返回鍵
         window.addEventListener('popstate', (event) => {
             const isMobile = window.innerWidth <= 1024;
             if (!isMobile) {
@@ -385,7 +413,6 @@
             }
         });
 
-        // 初始化
         if (window.innerWidth > 1024) {
             history.replaceState({ page: 'init-page' }, '', '');
         }
@@ -394,14 +421,11 @@
             const card = document.getElementById('detail-card');
             const contentArea = document.getElementById('detail-content');
             const template = document.getElementById('tpl-' + dataId);
-            
             document.getElementById('detail-title').innerText = titleText;
             contentArea.innerHTML = '';
             contentArea.appendChild(template.content.cloneNode(true));
-
-            if (isCompact) card.classList.add('compact-mode');
+            if (isCompact && window.innerWidth > 1024) card.classList.add('compact-mode');
             else card.classList.remove('compact-mode');
-
             switchPage('detail-section');
         }
 
