@@ -141,7 +141,7 @@
             filter: drop-shadow(0 0 5px rgba(160, 216, 239, 0.4));
             transition: all 0.8s ease;
         }
-        
+
         @media (min-width: 1501px) {
             .menu-box:hover {
                 background: rgba(160, 216, 239, 0.15);
@@ -155,77 +155,86 @@
             }
         }
 
+        /* --- 手機與橫向 (max-height) 修正 --- */
         @media (max-height: 600px) {
             body {
                 overflow-y: auto !important;
                 height: auto !important;
             }
-        
+
             .wrapper {
                 height: auto !important;
                 min-height: 100vh;
-                display: block !important; 
+                display: block !important;
                 padding: 40px 0 !important;
             }
-        
-            /* 修正：不要直接 display: none，改用 opacity 控制動畫 */
+
             .page-section {
                 position: relative !important;
                 height: auto !important;
-                /* 保留原本的動畫設定 */
                 transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1) !important;
                 opacity: 0;
-                visibility: hidden; /* 用 visibility 代替 display: none 才能跑動畫 */
-                display: none; 
+                display: none;
                 transform: scale(0.95) !important;
             }
-        
-            /* 當頁面啟動時 */
+
             .page-section.active {
                 display: flex !important;
-                visibility: visible;
                 opacity: 1 !important;
                 transform: scale(1) !important;
                 flex-direction: column !important;
                 align-items: center !important;
             }
-        
-            /* 讓 OPEN 按鈕保留放大特效 */
-            .btn-main {
-                transition: all 0.3s ease !important;
+
+            #menu-grid {
+                display: none;
+                grid-template-columns: repeat(2, 1fr) !important; 
+                grid-template-rows: auto !important;
+                width: 92%;
+                padding: 10px;
+                column-gap: 20px;
+                row-gap: 40px;
+                align-content: start;
+                padding-top: 80px;
+                margin: 0 auto;
             }
-            .btn-main:active {
-                transform: scale(1.15) !important;
-                background-color: var(--rimuru-blue) !important;
-                color: var(--deep-space) !important;
+            
+            #menu-grid.active {
+                display: grid !important;
             }
-        
-            /* 讓 關閉按鈕 找回旋轉與變紅特效 */
+
+            .menu-box {
+                padding: 10px !important;
+                border-radius: 25px;
+                min-height: 140px !important;
+                height: auto !important;
+                transition: all 0.2s ease !important;
+            }
+
+            .menu-box:active {
+                transform: scale(0.95) !important;
+                background: rgba(160, 216, 239, 0.25) !important;
+                border-color: var(--rimuru-blue) !important;
+            }
+
+            .box-icon { height: 90px; }
+            h3 { font-size: 1.1rem; }
+
             .close-btn {
                 position: fixed !important;
                 top: 20px !important;
                 right: 20px !important;
                 z-index: 10000 !important;
+                display: flex !important;
                 transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-                display: flex !important; /* 確保按鈕是顯示的 */
             }
-        
+
             .close-btn:active {
                 background: var(--error-red) !important;
                 transform: rotate(90deg) scale(1.1) !important;
                 border-color: transparent !important;
             }
-        
-            /* 選單方塊維持點擊縮小特效 */
-            .menu-box {
-                transition: all 0.2s ease !important;
-                min-height: 140px !important;
-            }
-            .menu-box:active {
-                transform: scale(0.95) !important;
-            }
         }
-        /* --- 手機版 2x2 與點擊回饋 --- */
         @media (max-width: 1500px) {
             #menu-grid {
                 grid-template-columns: repeat(2, 1fr);
@@ -277,7 +286,6 @@
                 font-size: 1.5rem !important;
             }
         }
-
         .text-content {
             display: flex;
             flex-direction: column;
@@ -288,10 +296,9 @@
         .tag { font-size: 0.8rem; color: var(--rimuru-blue); opacity: 0.7; letter-spacing: 2px; }
         h3 { font-size: 1.6rem; margin: 0; letter-spacing: 4px; font-weight: bold; }
 
-        /* --- 詳細頁面內容框 --- */
+        /* --- 詳細頁面內容 --- */
         .detail-page {
             width: 85%;
-            height: 80%;
             background: rgba(15, 23, 42, 0.9);
             border: 1px solid var(--rimuru-blue);
             border-radius: 30px;
@@ -301,13 +308,6 @@
             display: flex;
             flex-direction: column;
             position: relative;
-            transition: all 0.4s ease;
-        }
-
-        .detail-page.compact-mode {
-            height: auto !important;
-            max-width: 600px;
-            min-height: 200px;
         }
 
         .close-btn {
@@ -327,14 +327,15 @@
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .close-btn:hover, 
-        .close-btn:active {
+        .close-btn:hover, .close-btn:active {
             background: var(--error-red) !important;
             transform: rotate(90deg) scale(1.1) !important;
             border-color: transparent !important;
         }
 
         table { width: 100%; border-spacing: 0 15px; }
+        
+        /* 修正點擊回饋：加入 active 狀態 */
         .clickable-td {
             padding: 25px;
             background: rgba(255, 255, 255, 0.05);
@@ -344,15 +345,20 @@
             transition: all 0.3s ease;
             text-align: center;
         }
+
         .clickable-td:hover {
             background: rgba(160, 216, 239, 0.15);
             border-color: var(--rimuru-blue);
-            transform: translateY(-3px);
+        }
+
+        .clickable-td:active {
+            transform: scale(0.96);
+            background: rgba(160, 216, 239, 0.3);
+            border-color: var(--rimuru-blue);
         }
 
         .simple-text { font-size: 1.2rem; line-height: 1.6; color: #fff; }
         .copy-label { transition: color 0.4s ease; }
-    
     </style>
 </head>
 
@@ -368,19 +374,19 @@
 
         <section id="menu-grid" class="page-section">
             <button class="close-btn" onclick="goBack()">×</button>
-            <div class="menu-box" onclick="openDetail('status-win', '《作品展示》', true)">
+            <div class="menu-box" onclick="openDetail('status-win', '《作品展示》')">
                 <div class="box-icon"><img src="https://media1.tenor.com/m/Y1PtqpWHKzMAAAAC/maria-mikhailovna-kujou-alya-sometimes-hides-her-feelings-in-russian.gif"></div>
                 <div class="text-content"><div class="tag">PORTFOLIO</div><h3>作品集</h3></div>
             </div>
-            <div class="menu-box" onclick="openDetail('nation-win', '《關於我》', false)">
+            <div class="menu-box" onclick="openDetail('nation-win', '《關於我》')">
                 <div class="box-icon"><img src="https://media1.tenor.com/m/5WKu2y1Rx1UAAAAC/franklin-lamar.gif"></div>
                 <div class="text-content"><div class="tag">PROFILE</div><h3>關於我</h3></div>
             </div>
-            <div class="menu-box" onclick="openDetail('skill-win', '《聯絡方式》', true)">
+            <div class="menu-box" onclick="openDetail('skill-win', '《聯絡方式》')">
                 <div class="box-icon"><img src="https://media1.tenor.com/m/MYo3MGCRzwUAAAAC/%E3%83%AA%E3%83%A0%E3%83%AB-rimuru-tempest.gif"></div>
                 <div class="text-content"><div class="tag">SOCIAL</div><h3>聯絡方式</h3></div>
             </div>
-            <div class="menu-box" onclick="openDetail('memo-win', '《尚未完成》', false)">
+            <div class="menu-box" onclick="openDetail('memo-win', '《尚未完成》')">
                 <div class="box-icon"><img src="https://i.imgur.com/YvO54Ny.gif"></div>
                 <div class="text-content"><div class="tag">SYSTEM</div><h3>尚未完成</h3></div>
             </div>
@@ -452,56 +458,39 @@
         }
         animate();
 
-        function switchPage(pageId, isHistoryAction = false) {
-            const isMobile = window.innerWidth <= 1024;
-            if (!isMobile && !isHistoryAction) {
-                history.pushState({ page: pageId }, '', '');
-            }
+        function switchPage(pageId) {
             const allPages = document.querySelectorAll('.page-section');
             const target = document.getElementById(pageId);
-            allPages.forEach(p => p.classList.remove('active'));
-            setTimeout(() => {
-                allPages.forEach(p => p.style.display = 'none');
-                target.style.display = (pageId === 'menu-grid') ? 'grid' : 'flex';
-                requestAnimationFrame(() => target.classList.add('active'));
-            }, 300);
+            const activePage = document.querySelector('.page-section.active');
+
+            if (activePage) activePage.classList.remove('active');
+            
+            allPages.forEach(p => {
+                if (p.id !== pageId) p.style.display = 'none';
+            });
+
+            target.style.display = (pageId === 'menu-grid') ? 'grid' : 'flex';
+
+            // 關鍵修正：透過觸發 offsetHeight 強制瀏覽器 Reflow，確保過渡動畫 100% 執行
+            void target.offsetHeight; 
+
+            requestAnimationFrame(() => {
+                target.classList.add('active');
+            });
         }
 
         function goBack() {
-            const isMobile = window.innerWidth <= 1024;
             const activePage = document.querySelector('.page-section.active').id;
-            if (!isMobile && activePage !== 'init-page') {
-                window.history.back();
-            } else {
-                if (activePage === 'detail-section') switchPage('menu-grid', true);
-                else if (activePage === 'menu-grid') switchPage('init-page', true);
-            }
+            if (activePage === 'detail-section') switchPage('menu-grid');
+            else if (activePage === 'menu-grid') switchPage('init-page');
         }
 
-        window.addEventListener('popstate', (event) => {
-            const isMobile = window.innerWidth <= 1024;
-            if (!isMobile) {
-                if (event.state && event.state.page) {
-                    switchPage(event.state.page, true);
-                } else {
-                    switchPage('init-page', true);
-                }
-            }
-        });
-
-        if (window.innerWidth > 1024) {
-            history.replaceState({ page: 'init-page' }, '', '');
-        }
-
-        function openDetail(dataId, titleText, isCompact) {
-            const card = document.getElementById('detail-card');
+        function openDetail(dataId, titleText) {
             const contentArea = document.getElementById('detail-content');
             const template = document.getElementById('tpl-' + dataId);
             document.getElementById('detail-title').innerText = titleText;
             contentArea.innerHTML = '';
             contentArea.appendChild(template.content.cloneNode(true));
-            if (isCompact && window.innerWidth > 1024) card.classList.add('compact-mode');
-            else card.classList.remove('compact-mode');
             switchPage('detail-section');
         }
 
@@ -510,7 +499,7 @@
                 const label = element.querySelector('.copy-label');
                 const originalText = label.innerText;
                 label.style.color = "var(--success-green)";
-                label.innerText = "SUCCESS! 已複製到剪貼簿";
+                label.innerText = "SUCCESS! 已複製";
                 setTimeout(() => { label.style.color = ""; label.innerText = originalText; }, 2000);
             });
         }
