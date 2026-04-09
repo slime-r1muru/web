@@ -92,7 +92,7 @@
             font-family: inherit;
         }
 
-        .btn-main:hover, .btn-main:active {
+        .btn-main:hover {
             background-color: var(--rimuru-blue);
             color: var(--deep-space);
             transform: scale(1.15);
@@ -142,6 +142,7 @@
             transition: all 0.8s ease;
         }
 
+        /* 電腦版特效 (1501px 以上) */
         @media (min-width: 1501px) {
             .menu-box:hover {
                 background: rgba(160, 216, 239, 0.15);
@@ -150,46 +151,36 @@
                 box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(160, 216, 239, 0.3);
             }
             .menu-box:hover .box-icon { transform: scale(1.1); }
-            .menu-box:hover .box-icon img {
-                filter: drop-shadow(0 0 15px var(--rimuru-blue));
-            }
+            .menu-box:hover .box-icon img { filter: drop-shadow(0 0 15px var(--rimuru-blue)); }
         }
 
-        /* --- 手機與橫向 (max-height) 修正 --- */
-        @media (max-height: 600px) {
-            body {
-                overflow-y: auto !important;
-                height: auto !important;
-            }
+        /* 點擊特效 */
+        .effect-active {
+            transform: scale(0.92) !important;
+            background: rgba(160, 216, 239, 0.4) !important;
+            border-color: var(--rimuru-blue) !important;
+            transition: transform 0.1s ease !important;
+        }
 
-            .wrapper {
-                height: auto !important;
-                min-height: 100vh;
-                display: block !important;
-                padding: 40px 0 !important;
-            }
+        /* 手機與橫向 */
+        @media (max-width: 1500px), (max-height: 600px) {
+            body { overflow-y: auto !important; height: auto !important; }
+            .wrapper { height: auto !important; min-height: 100vh; display: block !important; padding: 0 !important; }
+            
+            .page-section { position: relative !important; height: auto !important; display: none; padding: 40px 0; }
+            .page-section.active { display: flex !important; flex-direction: column !important; align-items: center !important; }
 
-            .page-section {
-                position: relative !important;
-                height: auto !important;
-                transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1) !important;
-                opacity: 0;
-                display: none;
-                transform: scale(0.95) !important;
-            }
-
-            .page-section.active {
-                display: flex !important;
-                opacity: 1 !important;
-                transform: scale(1) !important;
-                flex-direction: column !important;
-                align-items: center !important;
+            /* 關鍵修正：讓手機版 OPEN 畫面垂直水平置中 */
+            #init-page.active {
+                height: 100vh !important; /* 強制佔滿螢幕高度 */
+                justify-content: center !important; /* 垂直置中 */
+                padding: 0 !important;
             }
 
             #menu-grid {
                 display: none;
-                grid-template-columns: repeat(2, 1fr) !important; 
-                grid-template-rows: auto !important;
+                grid-template-columns: repeat(2, 1fr) !important;
+                grid-template-rows: repeat(2, 180px) !important;
                 width: 92%;
                 padding: 10px;
                 column-gap: 20px;
@@ -198,23 +189,14 @@
                 padding-top: 80px;
                 margin: 0 auto;
             }
-            
-            #menu-grid.active {
-                display: grid !important;
-            }
+            #menu-grid.active { display: grid !important; }
 
             .menu-box {
                 padding: 10px !important;
                 border-radius: 25px;
-                min-height: 140px !important;
-                height: auto !important;
-                transition: all 0.2s ease !important;
-            }
-
-            .menu-box:active {
-                transform: scale(0.95) !important;
-                background: rgba(160, 216, 239, 0.25) !important;
-                border-color: var(--rimuru-blue) !important;
+                min-height: 100px !important;
+                height: 100% !important;
+                transition: transform 0.2s ease, background 0.2s ease !important;
             }
 
             .box-icon { height: 90px; }
@@ -225,67 +207,12 @@
                 top: 20px !important;
                 right: 20px !important;
                 z-index: 10000 !important;
-                display: flex !important;
-                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-            }
-
-            .close-btn:active {
-                background: var(--error-red) !important;
-                transform: rotate(90deg) scale(1.1) !important;
-                border-color: transparent !important;
-            }
-        }
-        @media (max-width: 1500px) {
-            #menu-grid {
-                grid-template-columns: repeat(2, 1fr);
-                /* 修改這裡的 140px，可以直接控制每一列的高度 */
-                grid-template-rows: repeat(2, 180px) !important; 
-                width: 92%;
-                padding: 10px;
-                column-gap: 20px; 
-                row-gap: 40px;
-                align-content: start;
-                padding-top: 80px;
-            }
-            .menu-box { 
-                padding: 10px !important; /* 縮減內距防止撐大 */
-                border-radius: 25px; 
-                /* 這裡一定要改！將原本的 180px 調小，方塊才能縮短 */
-                min-height: 100px !important; 
-                height: 100% !important; 
-                transition: transform 0.2s ease, background 0.2s ease; /* 縮短回饋時間 */
-            }
-
-            /* 手機點擊回饋特效 */
-            .menu-box:active {
-                transform: scale(0.95); /* 點擊時縮小 */
-                background: rgba(160, 216, 239, 0.25); /* 點擊時背景變亮 */
-                border-color: var(--rimuru-blue);
-            }
-
-            .box-icon { height: 90px; }
-            h3 { font-size: 1.1rem; }
-
-            .detail-page {
-                width: 95% !important;
-                height: 79% !important;
-                padding: 40px 20px !important;
-                border-radius: 40px !important;
-            }
-            
-            .simple-text p{ font-size: 1rem; }
-            .simple-text p { margin: 20px 0; line-height: 1.5; }
-
-            /* 關閉按鈕手機版位置修正 */
-            .close-btn {
-                position: absolute !important;
-                top: 20px !important;
-                right: 20px !important;
                 width: 45px !important;
                 height: 45px !important;
                 font-size: 1.5rem !important;
             }
         }
+
         .text-content {
             display: flex;
             flex-direction: column;
@@ -296,7 +223,7 @@
         .tag { font-size: 0.8rem; color: var(--rimuru-blue); opacity: 0.7; letter-spacing: 2px; }
         h3 { font-size: 1.6rem; margin: 0; letter-spacing: 4px; font-weight: bold; }
 
-        /* --- 詳細頁面內容 --- */
+        /* --- 詳細頁面 --- */
         .detail-page {
             width: 85%;
             background: rgba(15, 23, 42, 0.9);
@@ -330,12 +257,10 @@
         .close-btn:hover, .close-btn:active {
             background: var(--error-red) !important;
             transform: rotate(90deg) scale(1.1) !important;
-            border-color: transparent !important;
         }
 
         table { width: 100%; border-spacing: 0 15px; }
         
-        /* 修正點擊回饋：加入 active 狀態 */
         .clickable-td {
             padding: 25px;
             background: rgba(255, 255, 255, 0.05);
@@ -346,16 +271,8 @@
             text-align: center;
         }
 
-        .clickable-td:hover {
-            background: rgba(160, 216, 239, 0.15);
-            border-color: var(--rimuru-blue);
-        }
-
-        .clickable-td:active {
-            transform: scale(0.96);
-            background: rgba(160, 216, 239, 0.3);
-            border-color: var(--rimuru-blue);
-        }
+        .clickable-td:hover { background: rgba(160, 216, 239, 0.15); border-color: var(--rimuru-blue); }
+        .clickable-td:active { transform: scale(0.96); background: rgba(160, 216, 239, 0.3); }
 
         .simple-text { font-size: 1.2rem; line-height: 1.6; color: #fff; }
         .copy-label { transition: color 0.4s ease; }
@@ -369,24 +286,24 @@
         <section id="init-page" class="page-section active" style="display: flex;">
             <div class="rimuru-core"></div>
             <h2 style="letter-spacing: 8px; margin-bottom: 30px;">MY WEB</h2>
-            <button class="btn-main" onclick="switchPage('menu-grid')">OPEN</button>
+            <button class="btn-main" onclick="runEffect(this, () => switchPage('menu-grid'), 'pc-open')">OPEN</button>
         </section>
 
         <section id="menu-grid" class="page-section">
-            <button class="close-btn" onclick="goBack()">×</button>
-            <div class="menu-box" onclick="openDetail('status-win', '《作品展示》')">
+            <button class="close-btn" onclick="runEffect(this, goBack, 'close')">×</button>
+            <div class="menu-box" onclick="runEffect(this, () => openDetail('status-win', '《作品展示》'), 'pc-open')">
                 <div class="box-icon"><img src="https://media1.tenor.com/m/Y1PtqpWHKzMAAAAC/maria-mikhailovna-kujou-alya-sometimes-hides-her-feelings-in-russian.gif"></div>
                 <div class="text-content"><div class="tag">PORTFOLIO</div><h3>作品集</h3></div>
             </div>
-            <div class="menu-box" onclick="openDetail('nation-win', '《關於我》')">
+            <div class="menu-box" onclick="runEffect(this, () => openDetail('nation-win', '《關於我》'), 'pc-open')">
                 <div class="box-icon"><img src="https://media1.tenor.com/m/5WKu2y1Rx1UAAAAC/franklin-lamar.gif"></div>
                 <div class="text-content"><div class="tag">PROFILE</div><h3>關於我</h3></div>
             </div>
-            <div class="menu-box" onclick="openDetail('skill-win', '《聯絡方式》')">
+            <div class="menu-box" onclick="runEffect(this, () => openDetail('skill-win', '《聯絡方式》'), 'pc-open')">
                 <div class="box-icon"><img src="https://media1.tenor.com/m/MYo3MGCRzwUAAAAC/%E3%83%AA%E3%83%A0%E3%83%AB-rimuru-tempest.gif"></div>
                 <div class="text-content"><div class="tag">SOCIAL</div><h3>聯絡方式</h3></div>
             </div>
-            <div class="menu-box" onclick="openDetail('memo-win', '《尚未完成》')">
+            <div class="menu-box" onclick="runEffect(this, () => openDetail('memo-win', '《尚未完成》'), 'pc-open')">
                 <div class="box-icon"><img src="https://i.imgur.com/YvO54Ny.gif"></div>
                 <div class="text-content"><div class="tag">SYSTEM</div><h3>尚未完成</h3></div>
             </div>
@@ -394,7 +311,7 @@
 
         <section id="detail-section" class="page-section" style="justify-content: center; align-items: center;">
             <div id="detail-card" class="detail-page">
-                <button class="close-btn" onclick="goBack()">×</button>
+                <button class="close-btn" onclick="runEffect(this, goBack, 'close')">×</button>
                 <h2 id="detail-title" style="color:var(--rimuru-blue); border-bottom:1px solid; padding-bottom:10px;"></h2>
                 <div id="detail-content" style="margin-top:20px; overflow-y:auto;"></div>
             </div>
@@ -458,25 +375,30 @@
         }
         animate();
 
+        function runEffect(el, callback, type) {
+            el.classList.add('effect-active');
+            let delay = 300;
+            const isMobile = window.innerWidth < 1501;
+            if (type === 'pc-open') {
+                delay = 150; 
+            } else if (type === 'close') {
+                delay = isMobile ? 250 : 50;
+            }
+            setTimeout(() => {
+                el.classList.remove('effect-active');
+                if(callback) callback();
+            }, delay);
+        }
+
         function switchPage(pageId) {
             const allPages = document.querySelectorAll('.page-section');
             const target = document.getElementById(pageId);
             const activePage = document.querySelector('.page-section.active');
-
             if (activePage) activePage.classList.remove('active');
-            
-            allPages.forEach(p => {
-                if (p.id !== pageId) p.style.display = 'none';
-            });
-
+            allPages.forEach(p => { if (p.id !== pageId) p.style.display = 'none'; });
             target.style.display = (pageId === 'menu-grid') ? 'grid' : 'flex';
-
-            // 關鍵修正：透過觸發 offsetHeight 強制瀏覽器 Reflow，確保過渡動畫 100% 執行
             void target.offsetHeight; 
-
-            requestAnimationFrame(() => {
-                target.classList.add('active');
-            });
+            requestAnimationFrame(() => { target.classList.add('active'); });
         }
 
         function goBack() {
